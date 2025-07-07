@@ -27,8 +27,8 @@ def convert_tng_mass(gmass):
 def get_mpeak_from_mah(mah: np.ndarray):
     """Compute m_peak from mah."""
     assert mah.ndim == 2
-    Mpeak = np.fmax.accumulate(10**mah, axis=1)
-    m_peak = Mpeak / Mpeak[:, -1][:, None]
+    m_peak1 = np.fmax.accumulate(10**mah, axis=1)
+    m_peak = m_peak1 / m_peak1[:, -1][:, None]
     return m_peak
 
 
