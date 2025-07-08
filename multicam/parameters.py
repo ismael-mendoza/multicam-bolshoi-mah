@@ -26,8 +26,6 @@ default_params = {
     "tdyn",
     "vmax/vvir",
     "voff/vvir",
-    "gamma_tdyn",
-    "tdyn",
     "scale_of_last_mm",
     "b_to_a",
     "c_to_a",
@@ -38,10 +36,10 @@ default_params = {
 def derive_vvir(mcat, b):
     # units = km/s
     # prevent overflow by combining MKS factors into one constant.
-    # C = G_mks * mvir_factor_mks / rvir_factor_mks
-    C = 6.674e-11 * 1.988435e30 / 3.086e19
+    # k = G_mks * mvir_factor_mks / rvir_factor_mks
+    k = 6.674e-11 * 1.988435e30 / 3.086e19
     rvir, mvir = mcat.block(b, ["rvir", "mvir"])
-    vvir_mks = np.sqrt(C * mvir / rvir)
+    vvir_mks = np.sqrt(k * mvir / rvir)
     vvir = vvir_mks / 1e3
     return vvir
 
@@ -53,15 +51,14 @@ def get_vvir(rvir, mvir):
         rvir: virial radius in kpc/h
         mvir: virial mass in Msun/h
     """
-    C = 6.674e-11 * 1.988435e30 / 3.086e19
-    vvir_mks = np.sqrt(C * mvir / rvir)
+    k = 6.674e-11 * 1.988435e30 / 3.086e19
+    vvir_mks = np.sqrt(k * mvir / rvir)
     vvir = vvir_mks / 1e3
     return vvir
 
 
 def derive(pname: str, mcat, b):
     """Derive additional useful halo properties that are not in .minh catalog."""
-
     if pname == "phi_l":
         ax, ay, az, jx, jy, jz = mcat.block(b, ["ax", "ay", "az", "jx", "jy", "jz"])
         num = ax * jx + ay * jy + az * jz
