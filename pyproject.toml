@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=45"]
+requires      = ["setuptools>=45"]
 build-backend = "setuptools.build_meta"
 
 
@@ -25,9 +25,11 @@ dependencies = [
   "h5py >=3.9.0",
   "pandas >=2.1.1",
 ]
+requires-python = ">= 3.11"
 
 [project.optional-dependencies]
-dev = ["pytest", "ruff", "ipython", "ipykernel"]
+dev = ["pytest", "ruff", "ipython", "ipykernel", "jupyter"]
+
 
 [project.urls]
 home = "https://github.com/ismael-mendoza/multicam"
@@ -65,8 +67,9 @@ exclude = [
   "venv",
 ]
 
+
 # Same as Black.
-line-length = 88
+line-length  = 88
 indent-width = 4
 
 # Assume Python 3.12
@@ -91,12 +94,12 @@ exclude = ["*.ipynb"]
 [tool.ruff.lint]
 select = ["E", "F", "I", "W", "B", "SIM", "PLE", "PLC", "PLW", "RUF"]
 ignore = [
-  "C901", # I want to decide what is 'too' complex
-  "E501", # I don't care about formatting docstrings
-  "E731", # I like lambda's sometimes
+  "C901",    # I want to decide what is 'too' complex
+  "E501",    # I don't care about formatting docstrings
+  "E731",    # I like lambda's sometimes
   "PLC0206", # too picky, not always useful
-  "RUF027", # does not account for shell scripts correctly
-  "RUF052", # I find underscore variables useful
+  "RUF027",  # does not account for shell scripts correctly
+  "RUF052",  # I find underscore variables useful
 ]
 preview = true
 exclude = ["*.ipynb"]
@@ -104,4 +107,4 @@ exclude = ["*.ipynb"]
 
 [tool.pytest.ini_options]
 minversion = "6.0"
-testpaths = ['tests']
+testpaths  = ['tests']
