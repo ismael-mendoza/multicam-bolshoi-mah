@@ -25,3 +25,4 @@ data/processed/**/subhaloes.csv
 data/processed/*progenitors.txt
 data/processed/tng/**
 data/tng/**
+data/processed/tng**/**
