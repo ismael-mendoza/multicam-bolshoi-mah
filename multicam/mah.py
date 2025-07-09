@@ -8,6 +8,12 @@ from scipy.interpolate import interp1d
 from multicam import catalogs
 
 
+def get_an_from_am(am, mass_bins, mbin=0.498):
+    """Return scale corresponding to first mass bin bigger than `mbin`."""
+    idx = np.where(mass_bins > mbin)[0][0]
+    return am[:, idx]
+
+
 def get_mah(
     outdir="../../data/processed/bolshoi_m12",
     cutoff_missing=0.05,
@@ -156,12 +162,6 @@ def get_am(ma, scales, min_mass_bin, n_bins=100, log_spacing=True):
     # 6.
     am = np.array([np.exp(f(mass_bins)) for f in fs])
     return am, np.exp(mass_bins)
-
-
-def get_an_from_am(am, mass_bins, mbin=0.498):
-    """Return scale corresponding to first mass bin bigger than `mbin`."""
-    idx = np.where(mass_bins > mbin)[0][0]
-    return am[:, idx]
 
 
 def determine_cutoffs(
