@@ -36,7 +36,7 @@ def run_sbatch_job(
     if not job_dir.exists():
         job_dir.mkdir(exist_ok=True)
 
-    with open(jobfile, "w") as f:
+    with open(jobfile, "w", encoding='utf-8') as f:
         f.writelines(
             "#!/bin/bash\n\n"
             f"#SBATCH --job-name={jobname}\n"

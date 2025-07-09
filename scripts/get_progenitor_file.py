@@ -6,8 +6,8 @@ from pathlib import Path
 
 import click
 
-from multicam.progenitors import io_progenitors
-from multicam.sims import all_sims
+from multicam_bolshoi.progenitors import io_progenitors
+from multicam_bolshoi.sims import all_sims
 
 the_root = Path(__file__).absolute().parent.parent
 read_trees_dir = the_root.joinpath("consistent-trees", "read_tree")

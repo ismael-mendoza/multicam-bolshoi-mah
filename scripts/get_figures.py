@@ -11,21 +11,21 @@ import matplotlib.pyplot as plt
 import numpy as np
 from astropy import units as u
 from mpl_toolkits.axes_grid1 import make_axes_locatable
+from multicam.models import opcam_dict, prepare_datasets, training_suite
 from scipy.interpolate import interp1d
 
-from multicam import plotting as rxplots
-from multicam.correlations import (
+from multicam_bolshoi import plotting as rxplots
+from multicam_bolshoi.correlations import (
     add_box_indices,
     get_2d_corr,
     get_opt_corr,
     spearmanr,
     vol_jacknife_err,
 )
-from multicam.cosmo import get_a_from_t, get_fractional_tdyn, get_t_from_a
-from multicam.fits import alpha_analysis, get_early_late
-from multicam.mah import get_an_from_am, get_mah
-from multicam.models import opcam_dict, prepare_datasets, training_suite
-from multicam.plotting import CB_COLORS, LATEX_PARAMS, MARKS, set_rc
+from multicam_bolshoi.cosmo import get_a_from_t, get_fractional_tdyn, get_t_from_a
+from multicam_bolshoi.fits import alpha_analysis, get_early_late
+from multicam_bolshoi.mah import get_an_from_am, get_mah
+from multicam_bolshoi.plotting import CB_COLORS, LATEX_PARAMS, MARKS, set_rc
 
 plt.ioff()
 

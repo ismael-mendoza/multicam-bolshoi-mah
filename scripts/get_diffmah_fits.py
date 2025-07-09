@@ -3,8 +3,8 @@ from diffmah.fit_mah_helpers import get_loss_data, log_mah_mse_loss_and_grads
 from diffmah.utils import jax_adam_wrapper
 from tqdm import tqdm
 
-from multicam.cosmo import get_t_from_a
-from multicam.mah import get_mah
+from multicam_bolshoi.cosmo import get_t_from_a
+from multicam_bolshoi.mah import get_mah
 
 mah_data = get_mah("m12", "output", cutoff_missing=0.05, cutoff_particle=0.05)
 
