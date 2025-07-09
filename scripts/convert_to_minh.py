@@ -17,12 +17,12 @@ def work(cat_file):
 
     # first convert using gzip (without deleting original)
     if not unzipped_file.exists():
-        subprocess.run(f"gunzip -c {cat_file} >{unzipped_file}", shell=True)
+        subprocess.run(f"gunzip -c {cat_file} >{unzipped_file}", shell=True, check=True)
 
     # then we run minnow to conver tit to minh.
     cmd = f"{executable} {config} {all_vars} {unzipped_file} {output_dir}"
     print(cmd)
-    subprocess.run(cmd, shell=True)
+    subprocess.run(cmd, shell=True, check=True)
 
 
 cpus = 5
