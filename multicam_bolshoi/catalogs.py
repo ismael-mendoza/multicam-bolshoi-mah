@@ -18,7 +18,8 @@ def intersect(ids1, ids2):
     Notes:
         - Full intersection by repeating operation but switching order.
     """
-    assert type(ids1) == type(ids2) == np.ndarray
+    assert isinstance(ids1, np.ndarray)
+    assert isinstance(ids2, np.ndarray)
     assert np.all(np.sort(ids1) == ids1)
     assert np.all(np.sort(ids2) == ids2)
     indx = np.searchsorted(ids2, ids1)
