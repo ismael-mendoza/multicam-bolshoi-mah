@@ -1,7 +1,7 @@
 """Functions used to compute cosmological values."""
 from astropy.cosmology import LambdaCDM, z_at_value
 
-from multicam.sims import all_sims
+from multicam_bolshoi.sims import all_sims
 
 
 def get_fractional_tdyn(scale, tdyn, sim_name="Bolshoi"):

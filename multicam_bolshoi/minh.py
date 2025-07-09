@@ -6,19 +6,18 @@ import numpy as np
 from astropy.table import Table, vstack
 from pminh import minh
 
-from multicam import parameters
-from multicam.catalogs import filter_cat
+from multicam_bolshoi import parameters
+from multicam_bolshoi.catalogs import filter_cat
 
 
-def load_cat_minh(minh_file: str, params: list, filters: dict, verbose=False):
+def load_cat_minh(minh_file: str, params: list, filters: dict):
     """Return astropy table of Halo present-day parameters from .minh catalog.
 
     Parameters are filtered on the fly to avoid memory errors.
     """
     assert Path(minh_file).name.endswith(".minh")
     assert set(filters.keys()).issubset(set(params))
-    if verbose:
-        warnings.warn("Divide by zero errors are ignored, and filtered out.")
+    print("WARNING: Divide by zero errors are ignored, and filtered out.")
 
     mcat = minh.open(minh_file)
     cats = []

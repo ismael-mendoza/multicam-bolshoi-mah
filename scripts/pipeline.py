@@ -9,15 +9,14 @@ import click
 import numpy as np
 from astropy import table
 from astropy.io import ascii as astro_ascii
-from pminh import minh
-from tqdm import tqdm
-
 from multicam.catalogs import get_id_filter, intersect, save_cat_csv
 from multicam.minh import load_cat_minh
 from multicam.parameters import default_params
 from multicam.progenitors.progenitor_lines import get_next_progenitor
 from multicam.sims import all_sims
 from multicam.subhaloes import quantities as sub_quantities
+from pminh import minh
+from tqdm import tqdm
 
 the_root = Path(__file__).absolute().parent.parent
 raw_catalogs = the_root.joinpath("catalogs")

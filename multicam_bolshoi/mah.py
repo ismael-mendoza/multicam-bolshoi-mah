@@ -3,9 +3,8 @@ import json
 from pathlib import Path
 
 import numpy as np
-from scipy.interpolate import interp1d
-
 from multicam import catalogs
+from scipy.interpolate import interp1d
 
 
 def get_an_from_am(am, mass_bins, mbin=0.498):

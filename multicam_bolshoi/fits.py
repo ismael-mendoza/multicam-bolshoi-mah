@@ -6,7 +6,7 @@ from lmfit import Parameters, minimize
 from scipy.optimize import curve_fit
 from tqdm import tqdm
 
-from multicam.cosmo import get_t_from_a
+from multicam_bolshoi.cosmo import get_t_from_a
 
 
 def get_alpha(zs, lma):
