@@ -9,6 +9,7 @@
 *.bbl
 *.synctex.gz
 *.DS_Store
+*.egg-info
 multicam.egg-info
 consistent-trees/
 !consistent-trees/read_tree/example.c
