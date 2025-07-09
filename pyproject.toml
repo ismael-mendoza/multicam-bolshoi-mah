@@ -32,7 +32,8 @@ requires-python = ">= 3.11"
 multicam = { git = "https://github.com/ismael-mendoza/multicam", branch = 'main' }
 
 [project.optional-dependencies]
-dev = ["pytest", "ruff", "ipython", "ipykernel", "jupyter"]
+dev     = ["pytest", "ruff", "ipython", "ipykernel", "jupyter"]
+diffmah = ["diffmah>=0.7.0"]
 
 
 [project.urls]
