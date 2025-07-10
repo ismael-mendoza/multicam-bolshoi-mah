@@ -1,15 +1,18 @@
 """Download ROCKSTAR tree information and process it with Consistent Trees."""
+
 import multiprocessing
 import os
 import re
 import subprocess
 from pathlib import Path, PosixPath
 
-url_skeletons = {"Bolshoi": "https://www.slac.stanford.edu/~behroozi/Bolshoi_Trees/tree"}
+url_skeletons = {
+    "Bolshoi": "https://www.slac.stanford.edu/~behroozi/Bolshoi_Trees/tree"
+}
 
 
 def work(task):
-    return subprocess.run(task, shell=True)
+    return subprocess.run(task, shell=True, check=True)
 
 
 def download_trees(ncubes, data_dir, catalog_name):
@@ -32,7 +35,11 @@ def download_trees(ncubes, data_dir, catalog_name):
 
     # then download the files using multiprocessing
     os.chdir(data_dir.as_posix())
-    subprocess.run("cat downloads.txt | xargs -n 1 --max-procs 10 --verbose wget", shell=True)
+    subprocess.run(
+        "cat downloads.txt | xargs -n 1 --max-procs 10 --verbose wget",
+        shell=True,
+        check=True,
+    )
 
 
 def write_main_line_progenitors(read_trees_dir, trees_dir, prefix, mcut, cpus=5):
@@ -46,7 +53,7 @@ def write_main_line_progenitors(read_trees_dir, trees_dir, prefix, mcut, cpus=5)
         cpus (int):
     """
 
-    subprocess.run(f"cd {read_trees_dir}; make", shell=True)
+    subprocess.run(f"cd {read_trees_dir}; make", shell=True, check=True)
     cmds = []
     for p in trees_dir.iterdir():
         if p.suffix == ".dat" and p.name.startswith("tree"):
@@ -55,7 +62,7 @@ def write_main_line_progenitors(read_trees_dir, trees_dir, prefix, mcut, cpus=5)
             suffx = re.search(r"tree(_\d_\d_\d)\.dat", p.name).groups()[0]
             final = Path(f"{prefix}{suffx}.txt")
             if not final.is_file():
-                cmd = f"cd {read_trees_dir}; " f"./read_tree {p} {final} {mcut}"
+                cmd = f"cd {read_trees_dir}; ./read_tree {p} {final} {mcut}"
                 cmds.append(cmd)
 
     pool = multiprocessing.Pool(cpus)

@@ -22,7 +22,6 @@ data/processed/**/dm_cat.csv
 data/processed/**/ids.json
 data/processed/**/lookup.csv
 data/processed/**/progenitor_table.csv
-data/processed/**/subhaloes.csv
 data/processed/*progenitors.txt
 data/processed/tng/**
 data/tng/**

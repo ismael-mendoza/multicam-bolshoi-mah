@@ -1,4 +1,5 @@
 """Module to read main progenitor lines into python objects from text file."""
+
 import re
 
 from astropy.table import Table

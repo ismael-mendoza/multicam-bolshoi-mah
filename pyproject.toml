@@ -37,7 +37,7 @@ diffmah = ["diffmah>=0.7.0"]
 
 
 [project.urls]
-home = "https://github.com/ismael-mendoza/multicam"
+home = "https://github.com/ismael-mendoza/multicam-bolshoi-mah"
 
 [tool.setuptools.packages.find]
 include = ["multicam*"]
