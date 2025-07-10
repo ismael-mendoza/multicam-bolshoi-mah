@@ -1,4 +1,5 @@
 """Functions related to extracting MAH information from output catalogs."""
+
 import json
 from pathlib import Path
 
@@ -32,7 +33,8 @@ def get_mah(
         scale_map = json.load(fp)  # map from i -> scale
     indices = np.array(list(scale_map.keys()))
     scales = np.array(list(scale_map.values()))
-    sort_idx = np.argsort(scales)  # want order: early -> late. Low scales -> high scales (1.0)
+    # want order: early -> late. Low scales -> high scales (1.0)
+    sort_idx = np.argsort(scales)
     indices = indices[sort_idx].astype(int)  # easier to handle.
     scales = scales[sort_idx]
 
@@ -46,7 +48,12 @@ def get_mah(
 
     # get relevant cutoff on scales and mass bins (defined on m(a)).
     min_scale, min_mass_bin = determine_cutoffs(
-        ma_info["Mvir"], scales, cutoff_missing, cutoff_particle, particle_mass, particle_res
+        ma_info["Mvir"],
+        scales,
+        cutoff_missing,
+        cutoff_particle,
+        particle_mass,
+        particle_res,
     )
 
     # fill nan's with average `m` value of 1 particle
@@ -55,7 +62,9 @@ def get_mah(
     ma_peak[np.isnan(ma_peak)] = particle_mass / avg_mass
 
     # obtain a(m) and corresponding mass_bins
-    am, mass_bins = get_am(ma, scales, min_mass_bin, n_mass_bins, log_spacing=log_mbin_spacing)
+    am, mass_bins = get_am(
+        ma, scales, min_mass_bin, n_mass_bins, log_spacing=log_mbin_spacing
+    )
 
     # filter scales, indices, m(a) based on `min_scale`.
     keep_scale = scales > min_scale
@@ -94,13 +103,21 @@ def _get_ma_info(cat, indices):
     for i, idx in enumerate(indices):
         colname = f"mvir_a{idx}"
         Mvir[:, i] = cat[colname]
-    Mpeak = np.fmax.accumulate(Mvir, axis=1)  # fmax ignores nan's, but keeps the beginning ones.
+    Mpeak = np.fmax.accumulate(
+        Mvir, axis=1
+    )  # fmax ignores nan's, but keeps the beginning ones.
 
     ma_vir = Mvir / Mvir[:, -1].reshape(-1, 1)
     ma_peak = Mpeak / Mpeak[:, -1].reshape(-1, 1)
     ma_mix = Mvir / Mpeak[:, -1].reshape(-1, 1)
 
-    return {"ma_vir": ma_vir, "ma_peak": ma_peak, "ma_mix": ma_mix, "Mvir": Mvir, "Mpeak": Mpeak}
+    return {
+        "ma_vir": ma_vir,
+        "ma_peak": ma_peak,
+        "ma_mix": ma_mix,
+        "Mvir": Mvir,
+        "Mpeak": Mpeak,
+    }
 
 
 def get_am(ma, scales, min_mass_bin, n_bins=100, log_spacing=True):
@@ -126,7 +143,9 @@ def get_am(ma, scales, min_mass_bin, n_bins=100, log_spacing=True):
     6. Evaluate f(m) at the mass bins you decided that you liked in step 2. Now you can run your
     pipeline on this, just like you did for m(a).
     """
-    assert np.sum(np.isnan(ma)) == 0, "m(a) needs to be filled with `fill_value` previously."
+    assert np.sum(np.isnan(ma)) == 0, (
+        "m(a) needs to be filled with `fill_value` previously."
+    )
 
     # 1. + 2.
     if log_spacing:
@@ -137,7 +156,9 @@ def get_am(ma, scales, min_mass_bin, n_bins=100, log_spacing=True):
     # 3.
     # NOTE: Make function monotonic. We assume start is early -> late ordering.
     # NOTE: ma should not have any cuts.
-    m_peak = np.fmax.accumulate(ma, axis=1)  # fmax ignores nan's (except beginning ones)
+
+    # fmax ignores nan's (except beginning ones)
+    m_peak = np.fmax.accumulate(ma, axis=1)
 
     # 4. + 5.
     fs = []
@@ -150,12 +171,16 @@ def get_am(ma, scales, min_mass_bin, n_bins=100, log_spacing=True):
                 pairs.append((scales[j], m_peak[i][j]))
                 count += 1
 
-        assert len(pairs) != 1, "Only 1 pair added, so max reached at a -> 0, impossible."
+        assert len(pairs) != 1, (
+            "Only 1 pair added, so max reached at a -> 0, impossible."
+        )
 
         _scales = np.array([pair[0] for pair in pairs])
         _m_peaks = np.array([pair[1] for pair in pairs])
         fs.append(
-            interp1d(np.log(_m_peaks), np.log(_scales), bounds_error=False, fill_value=np.nan)
+            interp1d(
+                np.log(_m_peaks), np.log(_scales), bounds_error=False, fill_value=np.nan
+            )
         )
 
     # 6.
@@ -196,7 +221,8 @@ def determine_cutoffs(
     # NOTE: Assumes that order is early -> late.
     # NOTE: These two cuts are different because ROCKSTAR does not limit to ~50 particles.
     # determine scale we should cutoff based on num. of particles.
-    m_cutoff = np.nanquantile(Mvir, cutoff_particle, axis=0)  # it is monotonically decreasing
+    # it is monotonically decreasing
+    m_cutoff = np.nanquantile(Mvir, cutoff_particle, axis=0)
     idx2 = np.where(m_cutoff < min_mass)[0][-1] + 1  # over scales NOT data points.
     min_scale2 = scales[idx2]
 
@@ -208,7 +234,9 @@ def determine_cutoffs(
     # 99% haloes have a progenitor at that mass bin and (2) minimum mass bin m0 such that
     # 90% of haloes have their earliest a0 s.t. m(a0) > m0 satisfy m(a0) * Mvir(a=1)/ 1.35e8 > 50
     # NOTE: (1) is exactly Phil's suggestin.
-    min_mass_bin1 = np.nanquantile(np.nanmin(Mvir, axis=1) / Mvir[:, -1], 1 - cutoff_missing)
+    min_mass_bin1 = np.nanquantile(
+        np.nanmin(Mvir, axis=1) / Mvir[:, -1], 1 - cutoff_missing
+    )
     min_mass_bin2 = np.nanquantile(min_mass / Mvir[:, -1], 1 - cutoff_particle)
     assert isinstance(min_mass_bin1, float)
     assert isinstance(min_mass_bin2, float)

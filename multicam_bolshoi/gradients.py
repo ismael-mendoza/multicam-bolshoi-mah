@@ -1,4 +1,5 @@
 """Functions to compute gradients from MAH"""
+
 import findiff
 import numpy as np
 from scipy.interpolate import interp1d
@@ -21,7 +22,8 @@ def get_gradient(f, x, k=1, acc=2):
     for i in range(f.shape[1]):
         if i - k * (acc // 2) < 0:
             mode = "forward"
-            hx = x[i + 1] - x[i]  # accretion rate changes spacing a little bit at some scale.
+            # accretion rate changes spacing a little bit at some scale.
+            hx = x[i + 1] - x[i]
         elif i - k * (acc // 2) >= 0 and i + k * (acc // 2) < f.shape[1]:
             mode = "center"
             hx = x[i + 1] - x[i]
@@ -29,7 +31,8 @@ def get_gradient(f, x, k=1, acc=2):
             mode = "backward"
             hx = x[i] - x[i - 1]
 
-        coeffs = coeff_table[mode]["coefficients"]  # coefficients are indepenent of step size.
+        # coefficients are indepenent of step size.
+        coeffs = coeff_table[mode]["coefficients"]
         offsets = coeff_table[mode]["offsets"] * k + i
 
         assert np.all((offsets < f.shape[1]) & (offsets >= 0))

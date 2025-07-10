@@ -1,4 +1,5 @@
 """Contains functions to perform and process various fits (e.g. diffmah) to MAH data."""
+
 from pathlib import Path
 
 import numpy as np

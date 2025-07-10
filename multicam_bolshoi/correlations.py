@@ -1,4 +1,5 @@
 """Functions used to calculate correlations and errors on correlations."""
+
 import numpy as np
 from scipy import stats
 

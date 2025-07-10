@@ -1,4 +1,5 @@
 """Collection of all simulations that could be used with this package."""
+
 from collections import namedtuple
 
 Sim = namedtuple(
