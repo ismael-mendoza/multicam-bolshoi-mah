@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from astropy import units as u
 from mpl_toolkits.axes_grid1 import make_axes_locatable
-from multicam.models import opcam_dict, prepare_datasets, training_suite
+from multicam.models import prepare_datasets, training_suite
 from scipy.interpolate import interp1d
 
 from multicam_bolshoi import plotting as rxplots
@@ -40,6 +40,20 @@ FIGS_DIR.mkdir(exist_ok=True, parents=False)
 CACHE_DIR.mkdir(exist_ok=True, parents=False)
 
 rho_latex = r"\rho_{\rm sp}"
+
+
+# dictionary of max correlations mass bin of present-day halo properties with a(m).
+OPCAM_DICT = {
+    "cvir": {"mbin": 0.495, "order": -1},
+    "vmax/vvir": {"mbin": 0.397, "order": -1},
+    "t/|u|": {"mbin": 0.67, "order": +1},
+    "x0": {"mbin": 0.738, "order": +1},
+    "q": {"mbin": 0.67, "order": -1},
+    "b_to_a": {"mbin": 0.673, "order": -1},
+    "c_to_a": {"mbin": 0.644, "order": -1},
+    "spin": {"mbin": 0.54, "order": +1},
+    "spin_bullock": {"mbin": 0.54, "order": +1},
+}
 
 
 class Figure(ABC):
@@ -371,8 +385,8 @@ class TriangleSamples(Figure):
                 "model": "mixed_cam",
                 "kwargs": {
                     "mass_bins": mass_bins,
-                    "opt_mbins": [opcam_dict[param]["mbin"] for param in self.params],
-                    "cam_orders": [opcam_dict[param]["order"] for param in self.params],
+                    "opt_mbins": [OPCAM_DICT[param]["mbin"] for param in self.params],
+                    "cam_orders": [OPCAM_DICT[param]["order"] for param in self.params],
                 },
             },
         }
@@ -974,8 +988,8 @@ class ForwardPredMetrics(Figure):
                 "model": "mixed_cam",
                 "kwargs": {
                     "mass_bins": mass_bins,
-                    "opt_mbins": [opcam_dict[param]["mbin"] for param in self.params],
-                    "cam_orders": [opcam_dict[param]["order"] for param in self.params],
+                    "opt_mbins": [OPCAM_DICT[param]["mbin"] for param in self.params],
+                    "cam_orders": [OPCAM_DICT[param]["order"] for param in self.params],
                 },
             },
         }
