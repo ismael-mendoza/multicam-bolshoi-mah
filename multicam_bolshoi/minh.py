@@ -1,5 +1,5 @@
 """Functions that use minh"""
-import warnings
+
 from pathlib import Path
 
 import numpy as np
@@ -10,14 +10,15 @@ from multicam_bolshoi import parameters
 from multicam_bolshoi.catalogs import filter_cat
 
 
-def load_cat_minh(minh_file: str, params: list, filters: dict):
+def load_cat_minh(minh_file: str, params: list, filters: dict, verbose: bool = True):
     """Return astropy table of Halo present-day parameters from .minh catalog.
 
     Parameters are filtered on the fly to avoid memory errors.
     """
     assert Path(minh_file).name.endswith(".minh")
     assert set(filters.keys()).issubset(set(params))
-    print("WARNING: Divide by zero errors are ignored, and filtered out.")
+    if verbose:
+        print("WARNING: Divide by zero errors are ignored, and filtered out.")
 
     mcat = minh.open(minh_file)
     cats = []
