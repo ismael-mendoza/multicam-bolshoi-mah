@@ -1,5 +1,0 @@
-[flake8]
-exclude = .git
-max-line-length = 100
-inline-quotes = double
-docstring-convention=google

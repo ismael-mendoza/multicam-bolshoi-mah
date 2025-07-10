@@ -1,81 +1,113 @@
-[tool.poetry]
-authors = ["Ismael Mendoza <imendoza@umich.edu>"]
-classifiers = [
-  "Programming Language :: Python :: 3",
-  "License :: OSI Approved :: MIT License",
-  "Operating System :: OS Independent",
-]
-description = "Studies of relationship between dark matter halo present-day properties and their growth."
-keywords = ["cosmology", "haloes", "dark-matter", "nbody", "simulation"]
-license = "MIT"
-name = "multicam"
-packages = [{ include = "multicam" }]
-readme = "README.md"
-repository = "https://github.com/ismael-mendoza/multicam"
-version = "0.0.1"
-
-[tool.poetry.dependencies]
-astropy = ">=4.3.1"
-click = ">=8.0.0"
-colossus = ">=1.2.19"
-corner = ">=2.2.1"
-findiff = ">=0.8.9"
-lmfit = ">=1.0.3"
-matplotlib = ">=3.5.1, !=3.6.0"
-numpy = ">=1.22.0"
-python = ">=3.9,<3.12"
-scikit-learn = ">=1.0.0"
-scipy = ">=1.7.3"
-tqdm = ">=4.63.0"
-h5py = "^3.9.0"
-pandas = "^2.1.1"
-tables = "^3.9.1"
-
-[tool.poetry.dev-dependencies]
-pminh = { git = "https://github.com/ismael-mendoza/minnow", branch = "master", markers = "sys_platform == 'linux'" }
-Cython = ">=0.29.24"
-black = ">=22.1.0"
-flake8 = ">=4.0.1"
-isort = ">=5.10.1"
-jupyter-contrib-nbextensions = ">=0.5.1"
-mistune = ">=2.0.3"
-pre-commit = ">=2.16.0"
-pytest = ">=6.2.5"
-pytest-cov = ">=2.12.1"
-
-[tool.poetry.urls]
-"Bug Tracker" = "https://github.com/ismael-mendoza/multicam/issues"
-
 [build-system]
-build-backend = "poetry.core.masonry.api"
-requires = ["poetry-core>=1.0.0"]
+requires      = ["setuptools>=45"]
+build-backend = "setuptools.build_meta"
 
-[tool.black]
-line-length = 100
-target-version = ['py38']
 
-[tool.isort]
-profile = "black"
-src_paths = ["multicam", "bin", "tests"]
+[project]
+name = "multicam_bolshoi"
+authors = [{ name = "Ismael Mendoza" }]
+description = "Studies of relationship between dark matter halo present-day properties and their growth."
+version = "0.0.1"
+license = { file = "LICENSE" }
+readme = "README.md"
+dependencies = [
+  "astropy >=4.3.1",
+  "click >=8.0.0",
+  "colossus >=1.2.19",
+  "corner >=2.2.1",
+  "findiff >=0.8.9",
+  "lmfit >=1.0.3",
+  "matplotlib >=3.6.1",
+  "numpy >=1.22.0",
+  "scikit-learn >=1.0.0",
+  "scipy >=1.7.3",
+  "tqdm >=4.63.0",
+  "h5py >=3.9.0",
+  "pandas >=2.1.1",
+  "multicam",
+]
+requires-python = ">= 3.11"
+[tool.uv.sources]
+multicam = { git = "https://github.com/ismael-mendoza/multicam", branch = 'main' }
+
+[project.optional-dependencies]
+dev     = ["pytest", "ruff", "ipython", "ipykernel", "jupyter"]
+diffmah = ["diffmah>=0.7.0"]
+
+[project.urls]
+home = "https://github.com/ismael-mendoza/multicam-bolshoi-mah"
+
+[tool.setuptools.packages.find]
+include = ["multicam_bolshoi*"]
+
+[tool.ruff]
+exclude = [
+  ".bzr",
+  ".direnv",
+  ".eggs",
+  ".git",
+  ".git-rewrite",
+  ".hg",
+  ".ipynb_checkpoints",
+  ".mypy_cache",
+  ".nox",
+  ".pants.d",
+  ".pyenv",
+  ".pytest_cache",
+  ".pytype",
+  ".ruff_cache",
+  ".svn",
+  ".tox",
+  ".venv",
+  ".vscode",
+  "__pypackages__",
+  "_build",
+  "buck-out",
+  "build",
+  "dist",
+  "node_modules",
+  "site-packages",
+  "venv",
+]
+
+
+# Same as Black.
+line-length  = 88
+indent-width = 4
+
+# Assume Python 3.13
+target-version = "py313"
+
+[tool.ruff.format]
+# Like Black, use double quotes for strings.
+quote-style = "double"
+
+# Like Black, indent with spaces, rather than tabs.
+indent-style = "space"
+
+# Like Black, respect magic trailing commas.
+skip-magic-trailing-comma = false
+
+# Like Black, automatically detect the appropriate line ending.
+line-ending = "auto"
+
+exclude = ["*.ipynb"]
+
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W", "B", "SIM", "PLE", "PLC", "PLW", "RUF"]
+ignore = [
+  "C901",    # I want to decide what is 'too' complex
+  "E501",    # I don't care about formatting docstrings
+  "E731",    # I like lambda's sometimes
+  "PLC0206", # too picky, not always useful
+  "RUF027",  # does not account for shell scripts correctly
+  "RUF052",  # I find underscore variables useful
+]
+preview = true
+exclude = ["*.ipynb", "**__init__.py"]
+
 
 [tool.pytest.ini_options]
-filterwarnings = [
-  "ignore:.*the imp module is deprecated in favour of importlib; see the module's documentation for alternative uses:DeprecationWarning",
-]
 minversion = "6.0"
-testpaths = ['tests']
-
-[tool.pylint."MESSAGES CONTROL"]
-
-# Disable the message, report, category or checker with the given id(s). You
-# can either give multiple identifiers separated by comma (,) or put this
-# option multiple times (only on the command line, not in the configuration
-# file where it should appear only once). You can also use "--disable=all" to
-# disable everything first and then reenable specific checks. For example, if
-# you want to run only the similarities checker, you can use "--disable=all
-# --enable=similarities". If you want to run only the classes checker, but have
-# no Warning level messages displayed, use "--disable=all --enable=classes
-# --disable=W".
-disable = '''invalid-name,
-             unbalanced-tuple-unpacking,
-'''
+testpaths  = ['tests']
