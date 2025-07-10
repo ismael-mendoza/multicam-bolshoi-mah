@@ -6,7 +6,7 @@ from pathlib import Path
 
 z_map_file = Path("/home/imendoza/multicam/output/bolshoi_z_map.json")
 data_dir = Path("/home/imendoza/multicam/data/bolshoi_catalogs")
-with open(z_map_file, "r") as fp:
+with open(z_map_file, "r", encoding="utf-8") as fp:
     z_map = json.load(fp)
 
 hlist_template = "hlist_{}.list.gz"
@@ -19,7 +19,7 @@ downloads_file = data_dir.joinpath("downloads.txt")
 if downloads_file.exists():
     raise IOError("Delete downloads.txt file to re-run this script.")
 
-with open(downloads_file, "a") as f:
+with open(downloads_file, "a", encoding="utf-8") as f:
     for k, v in z_map.items():
         hlist_filename = hlist_template.format(v)
         hlist_file = data_dir.joinpath(hlist_filename)
@@ -29,4 +29,8 @@ with open(downloads_file, "a") as f:
 
 # then download the files using multiprocessing
 os.chdir(data_dir.as_posix())
-subprocess.run("cat downloads.txt | xargs -n 1 --max-procs 20 --verbose wget", shell=True)
+subprocess.run(
+    "cat downloads.txt | xargs -n 1 --max-procs 20 --verbose wget",
+    shell=True,
+    check=True,
+)
