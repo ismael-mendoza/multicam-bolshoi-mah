@@ -136,14 +136,26 @@ class CorrelationMAH(Figure):
             ma_data[param] = (ma_corr, ma_err)
             max_indx, opt_scale, opt_err_scale = get_opt_corr(ma, pvalue, scales, ibox)
             opt_err_scale = max(opt_err_scale, scales[max_indx] - scales[max_indx - 1])
-            ma_max_dict[param] = opt_scale, opt_err_scale, ma_corr[max_indx], ma_err[max_indx]
+            ma_max_dict[param] = (
+                opt_scale,
+                opt_err_scale,
+                ma_corr[max_indx],
+                ma_err[max_indx],
+            )
 
             # am
             am_corr, am_err = get_2d_corr(am, pvalue, ibox)
             am_data[param] = am_corr, am_err
             max_indx, opt_mbin, opt_err_mbin = get_opt_corr(am, pvalue, mass_bins, ibox)
-            opt_err_mbin = max(opt_err_mbin, mass_bins[max_indx] - mass_bins[max_indx - 1])
-            am_max_dict[param] = opt_mbin, opt_err_mbin, am_corr[max_indx], am_err[max_indx]
+            opt_err_mbin = max(
+                opt_err_mbin, mass_bins[max_indx] - mass_bins[max_indx - 1]
+            )
+            am_max_dict[param] = (
+                opt_mbin,
+                opt_err_mbin,
+                am_corr[max_indx],
+                am_err[max_indx],
+            )
 
         return {
             "tdyn": tdyn,
@@ -162,7 +174,8 @@ class CorrelationMAH(Figure):
             r"\begin{tabular}{|c|c|c|c|c|}" + "\n"
             r"\hline" + "\n"
             rf"$X$ & $a_{{\rm opt}}$ & ${rho_latex}\left(X, m(a_{{\rm opt}})\right)$"
-            rf" & $m_{{\rm opt}}$ & ${rho_latex}\left(X, a(m_{{\rm opt}})\right)$ \\ [0.5ex]" + "\n"
+            rf" & $m_{{\rm opt}}$ & ${rho_latex}\left(X, a(m_{{\rm opt}})\right)$ \\ [0.5ex]"
+            + "\n"
             r"\hline\hline" + "\n"
         )
         for param in self.params:
@@ -175,7 +188,9 @@ class CorrelationMAH(Figure):
 
         table += r"\end{tabular}" + "\n" + r"\caption{}" + "\n" + r"\end{table*}"
 
-        with open(FIGS_DIR.joinpath("max_corrs_table.txt"), "w") as fp:
+        with open(
+            FIGS_DIR.joinpath("max_corrs_table.txt"), "w", encoding="utf-8"
+        ) as fp:
             print(table.strip(), file=fp)
 
     def get_ma_figure(self, data):
@@ -198,11 +213,15 @@ class CorrelationMAH(Figure):
             # plot positive corr and negative corr with different markers.
             if sum(pos) > 0:
                 label = f"${latex_param}$" if sum(pos) > sum(neg) else None
-                ax.plot(scales[pos], _corr[pos], color=color, ls=self.lss[0], label=label)
+                ax.plot(
+                    scales[pos], _corr[pos], color=color, ls=self.lss[0], label=label
+                )
 
             if sum(neg) > 0:
                 label = f"${latex_param}$" if sum(pos) < sum(neg) else None
-                ax.plot(scales[neg], _corr[neg], color=color, ls=self.lss[1], label=label)
+                ax.plot(
+                    scales[neg], _corr[neg], color=color, ls=self.lss[1], label=label
+                )
 
             ax.fill_between(scales, _corr - err, _corr + err, color=color, alpha=0.3)
 
@@ -213,10 +232,12 @@ class CorrelationMAH(Figure):
             if param == "vmax/vvir":
                 assert j == 1
                 ax.axvline(scale, color=CB_COLORS[1], ls="--")
-                ax.text(scale + 0.01, abs(corr) + 0.05, r"$a_{\rm opt}$", color=CB_COLORS[1])
+                ax.text(
+                    scale + 0.01, abs(corr) + 0.05, r"$a_{\rm opt}$", color=CB_COLORS[1]
+                )
 
         # additional saving of max correlations for table
-        with open(FIGS_DIR.joinpath("max_corrs_ma.txt"), "w") as fp:
+        with open(FIGS_DIR.joinpath("max_corrs_ma.txt"), "w", encoding="utf-8") as fp:
             print(text.strip(), file=fp)
 
         ax.set_ylim(0, 0.8)
@@ -231,8 +252,8 @@ class CorrelationMAH(Figure):
 
         xticks = ax.get_xticks()[1:]
         fractional_tdyn = get_fractional_tdyn(xticks, tdyn, sim_name="Bolshoi")
-        fractional_tdyn = [f"${x/10**9:.2g}$" for x in fractional_tdyn]
-        ax2.set_xticklabels([np.nan] + fractional_tdyn)
+        fractional_tdyn = [f"${x / 10**9:.2g}$" for x in fractional_tdyn]
+        ax2.set_xticklabels([np.nan, *fractional_tdyn])
         ax2.set_xlabel(r"$ \Delta t / t_{\rm dyn}$", labelpad=10)
 
         ax.set_xlim(0.15, 1)
@@ -259,21 +280,25 @@ class CorrelationMAH(Figure):
             # plot positive corr and negative corr with different markers.
             if sum(pos) > 0:
                 label = f"${latex_param}$" if sum(pos) > sum(neg) else None
-                ax.plot(mass_bins[pos], _corr[pos], color=color, ls=self.lss[0], label=label)
+                ax.plot(
+                    mass_bins[pos], _corr[pos], color=color, ls=self.lss[0], label=label
+                )
 
             if sum(neg) > 0:
                 label = f"${latex_param}$" if sum(pos) < sum(neg) else None
-                ax.plot(mass_bins[neg], _corr[neg], color=color, ls=self.lss[1], label=label)
+                ax.plot(
+                    mass_bins[neg], _corr[neg], color=color, ls=self.lss[1], label=label
+                )
 
             ax.fill_between(mass_bins, _corr - err, _corr + err, alpha=0.3)
 
         # draw a vertical line at max scales, output table.
         text = ""
-        for j, param in enumerate(self.params):
+        for param in self.params:
             mbin, mbin_err, corr, err = max_dict[param]
             text += f"{param}: Max corr is {corr:.3f} +- {err:.3f} at mass bin {mbin:.3f} +- {mbin_err:.5f}\n"
 
-        with open(FIGS_DIR.joinpath("max_corrs_am.txt"), "w") as fp:
+        with open(FIGS_DIR.joinpath("max_corrs_am.txt"), "w", encoding="utf-8") as fp:
             print(text.strip(), file=fp)
 
         ax.set_ylim(0, 0.8)
@@ -295,14 +320,17 @@ class CorrelationMAH(Figure):
 
     def get_figures(self, data: Dict[str, np.ndarray]) -> Dict[str, mpl.figure.Figure]:
         self.get_latex_table(data)
-        return {"ma_corr": self.get_ma_figure(data), "am_corr": self.get_am_figure(data)}
+        return {
+            "ma_corr": self.get_ma_figure(data),
+            "am_corr": self.get_am_figure(data),
+        }
 
 
 class TriangleSamples(Figure):
     cache_name = "triangle"
     params = ("cvir", "t/|u|", "x0", "spin_bullock", "c_to_a")
-    which_log = [True, True, True, True, False]
-    subset_params = [2, 3, 4]
+    which_log = (True, True, True, True, False)
+    subset_params = (2, 3, 4)
     bbox_inches = "tight"
     pad_inches = 0.05
 
@@ -351,7 +379,9 @@ class TriangleSamples(Figure):
         joint_models = training_suite(data)
 
         x_test = datasets["all"]["test"][0]
-        samples_multigauss = joint_models["multicam"].sample(x_test).reshape(-1, n_targets)
+        samples_multigauss = (
+            joint_models["multicam"].sample(x_test).reshape(-1, n_targets)
+        )
         samples_linear = joint_models["multicam"].predict(x_test).reshape(-1, n_targets)
         samples_cam = joint_models["optcam"].predict(x_test).reshape(-1, n_targets)
 
@@ -392,13 +422,16 @@ class TriangleSamples(Figure):
         for model in nice_names:
             latex_model = nice_names[model]
             corr_values = corrs[model].values()
-            corr_row = f"{latex_model} & " + " & ".join([f"{corr:.2f}" for corr in corr_values])
+            corr_row = f"{latex_model} & " + " & ".join(
+                [f"{corr:.2f}" for corr in corr_values]
+            )
             table += rf"{corr_row} \\" + "\n"
             table += r"\hline" + "\n"
 
         table += r"\end{tabular}" + "\n" + r"\caption{}" + "\n" + r"\end{table*}"
 
-        with open(FIGS_DIR.joinpath("triangle_corrs_table.txt"), "w") as fp:
+        _path = FIGS_DIR.joinpath("triangle_corrs_table.txt")
+        with open(_path, "w", encoding="utf-8") as fp:
             print(table.strip(), file=fp)
 
     def get_figures(self, data: Dict[str, np.ndarray]) -> Dict[str, mpl.figure.Figure]:
@@ -407,7 +440,9 @@ class TriangleSamples(Figure):
         # (1) multicam gaussian samples on all params.
         labels = [rxplots.LATEX_PARAMS[param] for param in self.params]
         labels = [
-            rf"$\log_{{10}} \left({label[1:-1]}\right)$" if self.which_log[ii] else label
+            rf"$\log_{{10}} \left({label[1:-1]}\right)$"
+            if self.which_log[ii]
+            else label
             for ii, label in enumerate(labels)
         ]
         y_true = data.pop("truth")
@@ -502,7 +537,10 @@ class TriangleSamples(Figure):
                     color=CB_COLORS[1],
                 )
             axes[1, 0].annotate(
-                annotations[name], xy=(0.425, 0.50), xycoords="figure fraction", color=CB_COLORS[2]
+                annotations[name],
+                xy=(0.425, 0.50),
+                xycoords="figure fraction",
+                color=CB_COLORS[2],
             )
             # axes[1, 0].annotate(annotations[name], xy=(0.3, 0.68), xycoords="figure fraction")
             for ii in range(ndim):
@@ -528,7 +566,7 @@ class TriangleSamples(Figure):
                     idx1 = self.params.index(param1)
                     idx2 = self.params.index(param2)
                     y = data[model]
-                    corrs[model][(param1, param2)] = spearmanr(y[:, idx1], y[:, idx2])
+                    corrs[model][param1, param2] = spearmanr(y[:, idx1], y[:, idx2])
         self.get_latex_table(corrs)
         return figs
 
@@ -545,7 +583,8 @@ class PredictMAH(Figure):
         cat = mah_data["cat"]
         ma = mah_data["ma_peak"]
         am = mah_data["am"]
-        mass_bins = mah_data["mass_bins"][:-1]  # remove last bin to avoid spearman error.
+        # remove last bin to avoid spearman error.
+        mass_bins = mah_data["mass_bins"][:-1]
         scales = mah_data["scales"][:-1]  # same for scales.
         n_mbins = len(mass_bins)
         n_scales = len(scales)
@@ -610,9 +649,9 @@ class PredictMAH(Figure):
         dataset_names = ["cvir_only", "x0_only", "tu_only", "all"]
         mdl_names = ["linear_cvir", "linear_x0", "linear_tu", "linear_all"]
         ibox = cat[test_idx]["ibox"]  # need it for errors.
-        for dataset_names, mdl_name in zip(dataset_names, mdl_names):
+        for dt_names, mdl_name in zip(dataset_names, mdl_names, strict=True):
             model = models[mdl_name]
-            x_test, y_test = datasets[dataset_names]["test"]
+            x_test, y_test = datasets[dt_names]["test"]
             y_pred = model.predict(x_test)
 
             for jj in range(n_mbins):
@@ -648,11 +687,14 @@ class PredictMAH(Figure):
 
         # (1) Correlation m(a) vs m_pred(a) figure
         fig1, ax = plt.subplots(1, 1)
-        for jj, (nice_name, mdl_name) in enumerate(zip(nice_names, mdl_names)):
+        _itr = enumerate(zip(nice_names, mdl_names, strict=True))
+        for jj, (nice_name, mdl_name) in _itr:
             corr = corrs_ma[mdl_name]
             err = errs_ma[mdl_name]
             ax.plot(scales, corr, label=nice_name, color=CB_COLORS[jj])
-            ax.fill_between(scales, corr - err, corr + err, color=CB_COLORS[jj], alpha=0.5)
+            ax.fill_between(
+                scales, corr - err, corr + err, color=CB_COLORS[jj], alpha=0.5
+            )
         ax.set_xlabel("$a$")
         ax.set_ylabel(rf"${rho_latex}\left(m(a), m_{{\rm pred}}(a)\right)$")
         ax.set_yticks(np.arange(0.0, 0.9, 0.1))
@@ -662,11 +704,14 @@ class PredictMAH(Figure):
 
         # (2) Correlation a(m) vs a_pred(m) figure
         fig2, ax = plt.subplots(1, 1)
-        for jj, (nice_name, mdl_name) in enumerate(zip(nice_names, mdl_names)):
+        _itr = enumerate(zip(nice_names, mdl_names, strict=True))
+        for jj, (nice_name, mdl_name) in _itr:
             corr = corrs_am[mdl_name]
             err = errs_am[mdl_name]
             ax.plot(mass_bins, corr, label=nice_name, color=CB_COLORS[jj])
-            ax.fill_between(mass_bins, corr - err, corr + err, color=CB_COLORS[jj], alpha=0.5)
+            ax.fill_between(
+                mass_bins, corr - err, corr + err, color=CB_COLORS[jj], alpha=0.5
+            )
         ax.set_xlabel("$m$")
         ax.set_ylabel(rf"${rho_latex}\left(a(m), a_{{\rm pred}}(m)\right)$")
         ax.set_yticks(np.arange(0.0, 0.9, 0.1))
@@ -791,7 +836,7 @@ class InvPredMetrics(Figure):
 
         output = {}
         ibox = cat[test_idx]["ibox"]
-        for ds, mdl in zip(ds_names, mdl_names):
+        for ds, mdl in zip(ds_names, mdl_names, strict=True):
             d = defaultdict(lambda: np.zeros(n_params))
             x_test, y_test = datasets[ds]["test"]
             y_est = models[mdl].predict(x_test)
@@ -811,7 +856,8 @@ class InvPredMetrics(Figure):
         fig, ax = plt.subplots(1, 1)
         mdl_names, nice_names, output = data.values()
         x_bias = -0.2
-        for ii, (mdl, label) in enumerate(zip(mdl_names, nice_names)):
+        _itr = enumerate(zip(mdl_names, nice_names, strict=True))
+        for ii, (mdl, label) in _itr:
             m, c = MARKS[ii], CB_COLORS[ii]
             mval, merr = output[mdl]["val"], output[mdl]["err"]
             plot_params = [LATEX_PARAMS[param] for param in self.params]
@@ -936,12 +982,17 @@ class ForwardPredMetrics(Figure):
 
         models = training_suite(data)
 
-        mdl_names = ("multicam_ma", "multicam_ma_diffmah", "multicam_params_diffmah", "optcam")
+        mdl_names = (
+            "multicam_ma",
+            "multicam_ma_diffmah",
+            "multicam_params_diffmah",
+            "optcam",
+        )
         ds_names = ("ma", "ma_diffmah", "params_diffmah", "am")
 
         output = {}
         ibox = cat[test_idx]["ibox"]
-        for ds, mdl in zip(ds_names, mdl_names):
+        for ds, mdl in zip(ds_names, mdl_names, strict=True):
             d = defaultdict(lambda: np.zeros(n_params))
             x_test, y_test = datasets[ds]["test"]
             y_est = models[mdl].predict(x_test)
@@ -966,7 +1017,8 @@ class ForwardPredMetrics(Figure):
         fig, ax = plt.subplots(1, 1)
         mdl_names, output = data.values()
         x_bias = -0.2
-        for ii, (mdl, label) in enumerate(zip(mdl_names, nice_names)):
+        _itr = enumerate(zip(mdl_names, nice_names, strict=True))
+        for ii, (mdl, label) in _itr:
             m, c = MARKS[ii], CB_COLORS[ii]
             mval, merr = output[mdl]["val"], output[mdl]["err"]
             plot_params = [LATEX_PARAMS[param] for param in self.params]
