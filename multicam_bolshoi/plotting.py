@@ -161,7 +161,7 @@ def draw_histogram(
     if vline == "median":
         ax.axvline(np.median(values), ls="--", color=color)
 
-    elif isinstance(vline, float) or isinstance(vline, int):
+    elif isinstance(vline, (float, int)):
         ax.axvline(vline, ls="--", color=color)
 
     elif vline is None:

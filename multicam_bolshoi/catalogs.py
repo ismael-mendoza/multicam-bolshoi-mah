@@ -31,7 +31,7 @@ def intersect(ids1, ids2):
 
 
 def get_id_filter(ids):
-    assert isinstance(ids, list) or isinstance(ids, np.ndarray)
+    assert isinstance(ids, (list, np.ndarray))
     ids = np.array(ids)
     return {"id": lambda x: intersect(np.array(x), ids)}
 

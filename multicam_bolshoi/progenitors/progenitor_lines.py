@@ -9,8 +9,8 @@ def get_next_progenitor(pf):
     # pf is a file pointer to file containing extracted main line progenitor information.
     # this function reads from the file pointer and returns the first progenitor line found.
 
-    for line in pf:
-        line = line.rstrip()  # remove trailing whitespace
+    for ln in pf:
+        line = ln.rstrip()  # remove trailing whitespace
         if line:  # not empty
             top_match = re.match(
                 r"Order is: \(id, mvir, scale, scale_of_last_MM, coprog_id, coprog_mvir, "
@@ -38,7 +38,7 @@ def get_next_progenitor(pf):
                     coprog_id,
                     coprog_mvir,
                     coprog_scale,
-                ) = (float(x) if x != "" else -1 for x in halo_match.groups())
+                ) = (float(x) if x else -1 for x in halo_match.groups())
                 prog_line.add(
                     (
                         halo_id,

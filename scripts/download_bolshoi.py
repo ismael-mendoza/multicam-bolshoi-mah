@@ -20,7 +20,8 @@ if downloads_file.exists():
     raise IOError("Delete downloads.txt file to re-run this script.")
 
 with open(downloads_file, "a", encoding="utf-8") as f:
-    for k, v in z_map.items():
+    for k in z_map:
+        v = z_map[k]
         hlist_filename = hlist_template.format(v)
         hlist_file = data_dir.joinpath(hlist_filename)
         if not hlist_file.exists():
