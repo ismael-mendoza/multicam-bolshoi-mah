@@ -16,20 +16,14 @@ For a tutorial on how to use the MultiCAM algorithm please refer to the [intro n
 If you use this code in your research, please cite the following paper:
 
 ```bibtex
-@ARTICLE{2023arXiv230201346M,
-       author = {{Mendoza}, Ismael and {Mansfield}, Philip and {Wang}, Kuan and {Avestruz}, Camille},
-        title = "{MultiCAM: A multivariable framework for connecting the mass accretion history of haloes with their properties}",
-      journal = {arXiv e-prints},
-     keywords = {Astrophysics - Cosmology and Nongalactic Astrophysics},
-         year = 2023,
-        month = feb,
-          eid = {arXiv:2302.01346},
-        pages = {arXiv:2302.01346},
-          doi = {10.48550/arXiv.2302.01346},
-archivePrefix = {arXiv},
-       eprint = {2302.01346},
- primaryClass = {astro-ph.CO},
-       adsurl = {https://ui.adsabs.harvard.edu/abs/2023arXiv230201346M},
-      adsnote = {Provided by the SAO/NASA Astrophysics Data System}
+@article{mendoza2023multicam,
+  title={MultiCAM: a multivariable framework for connecting the mass accretion history of haloes with their properties},
+  author={Mendoza, Ismael and Mansfield, Philip and Wang, Kuan and Avestruz, Camille},
+  journal={Monthly Notices of the Royal Astronomical Society},
+  volume={523},
+  number={4},
+  pages={6386--6400},
+  year={2023},
+  publisher={Oxford University Press}
 }
 ```
