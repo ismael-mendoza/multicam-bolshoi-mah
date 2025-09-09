@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from astropy import units as u
 from mpl_toolkits.axes_grid1 import make_axes_locatable
-from multicam.models import prepare_datasets, training_suite
+from multicam.train import prepare_datasets, training_suite
 from scipy.interpolate import interp1d
 
 from multicam_bolshoi import plotting as rxplots
@@ -1038,7 +1038,7 @@ class ForwardPredMetrics(Figure):
             plot_params = [LATEX_PARAMS[param] for param in self.params]
             rxplots.metrics_plot(ax, mval, merr, plot_params, label, x_bias, m, c)
             x_bias += 0.1
-        ax.set_ylim(0.3, 0.8)
+        ax.set_ylim(0.3, 0.85)
         ax.axvline(len(self.params) - 0.5 - 0.02, ymin=0.0, ymax=1.0, color="k", lw=1.3)
         ax.set_xlim(-0.5, len(self.params) - 0.5)
         ax.set_ylabel(rf"${rho_latex}\left(y_{{\rm pred}}, y_{{\rm true}}\right)$")
